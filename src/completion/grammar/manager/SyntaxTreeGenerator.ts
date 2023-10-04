@@ -2,15 +2,16 @@ import { ANTLRInputStream, CommonTokenStream,LexerNoViableAltException } from 'a
 import {KotlinParser} from "./../antlr4_res/KotlinParser";
 import {KotlinLexer} from "./../antlr4_res/KotlinLexer";
 import CustomVisitor from './customClass/CustomVisitor'
-
+import {CustomErrorListener,Error} from './customClass/CustomErrorListener'
 export default class SyntaxTreeGenerator {
     private inputStream: ANTLRInputStream;
     public lexer!: KotlinLexer;
     private tokenStream!: CommonTokenStream;
     private parser!: KotlinParser;
     private tree: any;
-    public Visitor!: CustomVisitor;
-
+    public visitor!: CustomVisitor;
+    public error:CustomErrorListener;
+    public tokens:any[]
     constructor(sourceCode: string) {
         this.inputStream = new ANTLRInputStream(sourceCode);
     }
@@ -28,8 +29,8 @@ export default class SyntaxTreeGenerator {
 
     applyCustomError(CustomError: any) {
         this.parser.removeErrorListeners();
-        this.parser.addErrorListener(new CustomError());
-       // this.parser.addErrorListener(new CustomErrorListen())
+        this.error=new CustomError()
+        this.parser.addErrorListener(this.error);
         return this;
     }
 
@@ -39,12 +40,21 @@ export default class SyntaxTreeGenerator {
     }
 
     applyVisitor(CustomVisitor: any) {
-        this.Visitor = new CustomVisitor();
-        this.Visitor.visit(this.tree)
+        this.visitor = new CustomVisitor();
+        this.visitor.visit(this.tree)
         return this;
     }
 
     build() {
         return this;
+    }
+    initError(){
+		this.error.errorArray=[]
+    }
+    getErrorArray(){
+		return  this.error.errorArray
+    }
+    getTypeName(type:number){
+		return KotlinParser.VOCABULARY.getLiteralName(type)
     }
 }

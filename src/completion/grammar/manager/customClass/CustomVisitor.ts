@@ -1,6 +1,6 @@
 import { KotlinParserVisitor } from './../../antlr4_res/KotlinParserVisitor';
 import { AbstractParseTreeVisitor } from 'antlr4ts/tree/AbstractParseTreeVisitor';
-
+  
 // Import des contextes
 import { KotlinFileContext } from './../../antlr4_res/KotlinParser';
 import { ScriptContext } from './../../antlr4_res/KotlinParser';
@@ -200,20 +200,19 @@ export default class CustomVisitor extends AbstractParseTreeVisitor<number> impl
             const importkeyword = importOrigin.split('.').filter(e => e !== "*");
             const importAlias = header.importAlias()?.text;
             const isAlias = importAlias ? true : false;
-            this.importIdentifierInfo.push({
-                importKeyword: importkeyword,
-                isAlias: isAlias,
-                importOrigin: importOrigin,
-                importAlias: importAlias
-            });
+            const importObjet:ImportStructure=new ImportStructure(importkeyword)
+            importObjet.isAlias=isAlias
+            importObjet.importOrigin=importOrigin
+            importObjet.importAlias=importAlias
+            this.importIdentifierInfo.push(importObjet);
         });
         return this.visitReturn(ctx)
     };
 
     visitClassDeclaration(ctx: ClassDeclarationContext): number {
         const className = ctx.simpleIdentifier().text;
-        let newClass: ClassStructure = { name: className, innerClass: [], parameters: [], variables: [], methods: [] };
-        this.currentClass ? this.currentClass?.innerClass?.push(newClass) :
+        let newClass: ClassStructure = new ClassStructure(className);
+        this.currentClass ? this.currentClass?.body.classDeclaration.push(newClass) :
             this.classDeclarationInfo.push(newClass);
         this.currentClass = newClass;
         this.classStack.push(newClass);
@@ -225,10 +224,8 @@ export default class CustomVisitor extends AbstractParseTreeVisitor<number> impl
 
     visitClassParameters(ctx: ClassParametersContext): number {
         ctx.classParameter().forEach(param => {
-            const parameter: Parameter = {
-                name: param.simpleIdentifier().text,
-                type: param.type_().text
-            }
+            const parameter: Parameter = new Parameter(param.simpleIdentifier().text)
+            parameter.type=param.type_().text
             this.currentClass.parameters.push(parameter);
         });
         return this.visitReturn(ctx);
@@ -236,16 +233,10 @@ export default class CustomVisitor extends AbstractParseTreeVisitor<number> impl
 
     visitFunctionDeclaration(ctx: FunctionDeclarationContext): number {
         const functionName = ctx.simpleIdentifier().text;
-        const newFunction: FunctionStructure = {
-            name: functionName,
-            parameters: [],
-            returnType: null,
-            innerFunction: [],
-            innerVariables:[]
-        }
-        this.currentFunction ? this.currentFunction.innerFunction.push(newFunction) : this.functionDeclarationInfo.push(newFunction);
+        const newFunction: FunctionStructure = new FunctionStructure(functionName)
+        this.currentFunction ? this.currentFunction.body.functionDeclaration.push(newFunction) : this.functionDeclarationInfo.push(newFunction);
         if (this.currentClass) {
-            this.currentClass.methods.push(newFunction);
+            this.currentClass.body.functionDeclaration.push(newFunction);
         }
         this.currentFunction = newFunction;
         this.functionStack.push(newFunction);
@@ -263,7 +254,8 @@ export default class CustomVisitor extends AbstractParseTreeVisitor<number> impl
     visitFunctionValueParameter(ctx: FunctionValueParameterContext): number {
         const paramName = ctx.parameter().simpleIdentifier().text;
         const paramType = ctx.parameter().type_().text;
-        const newParam: Parameter = { name: paramName, type: paramType }
+        const newParam: Parameter = new Parameter(paramName)
+        newParam.type=paramType
         if (this.currentFunction) {
             this.currentFunction.parameters.push(newParam);
         }
@@ -273,7 +265,8 @@ export default class CustomVisitor extends AbstractParseTreeVisitor<number> impl
     visitPropertyDeclaration(ctx:PropertyDeclarationContext):number{
 			const mutable=ctx.VAR()
 			const isMutable=mutable? true : false
-			this.currentProperty={name:"",type:'',isMutable:isMutable}
+			this.currentProperty=new PropertyStructure('')
+			this.currentProperty.isMutable=isMutable
 			return this.visitReturn(ctx)
     }
     visitVariableDeclaration(ctx:VariableDeclarationContext):number{
@@ -281,13 +274,11 @@ export default class CustomVisitor extends AbstractParseTreeVisitor<number> impl
 		const variableType=ctx.type_()?.text
 		this.currentProperty.name=variableName
 		this.currentProperty.type=variableType
-		if(this.currentFunction) this.currentFunction.innerVariables.push(this.currentProperty)
-		if (this.currentClass) this.currentClass.variables.push(this.currentProperty)
+		if(this.currentFunction) this.currentFunction.body.variableDeclaration.push(this.currentProperty)
+		if (this.currentClass) this.currentClass.body.variableDeclaration.push(this.currentProperty)
 		if(!this.currentFunction && !this.currentClass) this.variableDeclarationInfo.push(this.currentProperty)
 		return this.visitReturn(ctx)
     }
-    
-    
     
     visitReturn(ctx) {
         return 1 + super.visitChildren(ctx);

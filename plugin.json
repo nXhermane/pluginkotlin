@@ -1,6 +1,6 @@
 {
-  "id": "acode.plugin",
-  "name": "Plugin",
+  "id": "kotlin.plugin",
+  "name": "kotlin plugin",
   "main": "dist/main.js",
   "version": "1.0.0",
   "readme": "readme.md",

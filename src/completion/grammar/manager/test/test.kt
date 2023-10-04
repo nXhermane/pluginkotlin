@@ -80,11 +80,11 @@ fun mainn() {
 	
 	println("La somme des nombres pairs multipliés par 2 est $somme")
 }
-class variabletest(var yrllo:String) {
+classs variabletest(var yrllo:String) {
 		val yoyu:String="pipo"
 		class yopu(){
 			var pupu:String="pupo"
-			fun ypi()
+			fun ypi(){
 				var Build:String="pup"
 			}
 		}

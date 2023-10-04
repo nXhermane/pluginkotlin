@@ -1,0 +1,4 @@
+{
+  "watch": ["src/completion/grammar/manager/text/testTree.ts", "src/completion/grammar/manager/customClass/CustormVisitor.ts","src/completion/grammar/manager/"],
+  "ext": "ts,kt"
+}
