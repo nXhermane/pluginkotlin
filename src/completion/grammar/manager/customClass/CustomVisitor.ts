@@ -211,6 +211,7 @@ export default class CustomVisitor extends AbstractParseTreeVisitor<number> impl
 
     visitClassDeclaration(ctx: ClassDeclarationContext): number {
         const className = ctx.simpleIdentifier().text;
+        console.log(className)
         let newClass: ClassStructure = new ClassStructure(className);
         this.currentClass ? this.currentClass?.body.classDeclaration.push(newClass) :
             this.classDeclarationInfo.push(newClass);

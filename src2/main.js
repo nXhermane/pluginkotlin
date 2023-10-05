@@ -1,22 +1,21 @@
 import plugin from '../plugin.json';
-import {test} from './completion/grammar/manager/test/testTree'
+//const toast = acode.require('toast')
+//import style from './style.scss'
+
+import tree from './grammar/manager/test/testTree.js'
+
+
+
+
 class AcodePlugin {
-
 	async init() {
-		alert('hello world')
-		editorManager.on('switch-file', (file) => {
-			alert("l'evenemnt fonctionne")
-			const cond=file.name.endsWith('.kt')
-			alert(cond)
-    if (file) {
-        alert(file.name);
-    }
-    window.addEventListener('click',()=>{
-		const acodeTest=new test()
-		alert(`Temps d'analyse => ${acodeTest.fin - acodeTest.depart} ms`)
-    })
-});
 
+
+	window.addEventListener('click',()=>{
+		alert('oui commencer')
+		const newTree=new tree()
+		alert(newTree.duree)
+	})
 
 	}
 
