@@ -1,14 +1,18 @@
-import fs from 'fs'
-import SyntaxTreeGenerator from './../SyntaxTreeGenerator'
-import {KotlinLexer} from './../../antlr4_res//KotlinLexer';
-import {KotlinParser} from './../../antlr4_res/KotlinParser';
-import { KotlinParserVisitor} from './../../antlr4_res/KotlinParserVisitor';
-import {CustomErrorListener} from './../customClass/CustomErrorListener'
-import CustomVisitor from './../customClass/CustomVisitor'
+//import fs from 'fs'
+import SyntaxTreeGenerator from './../SyntaxTreeGenerator.ts'
+import {KotlinLexer} from './../../antlr4_res//KotlinLexer.ts';
+import {KotlinParser} from './../../antlr4_res/KotlinParser.ts';
+import { KotlinParserVisitor} from './../../antlr4_res/KotlinParserVisitor.ts';
+import {CustomErrorListener} from './../customClass/CustomErrorListener.ts'
+import CustomVisitor from './../customClass/CustomVisitor.ts'
 
 
-const sourceCode= fs.readFileSync('./test.kt','utf-8')
-
+//const sourceCode= fs.readFileSync('./test.kt','utf-8')
+const sourceCode=`
+fun yello(typ:String){
+	println("hello")
+}
+`
 
 export class test{
 	depart:number

@@ -3,6 +3,7 @@ const path = require('path');
 
 module.exports = (env, options) => {
   const { mode = 'development' } = options;
+  
   const rules = [
     {
       test: /\.m?js$/,
@@ -15,13 +16,13 @@ module.exports = (env, options) => {
           },
         },
       ],
-    },
+    }
   ];
 
   const main = {
     mode,
     entry: {
-      main: './src/main.ts',
+      main: './src/main.js',
     },
     output: {
       path: path.resolve(__dirname, 'dist'),
