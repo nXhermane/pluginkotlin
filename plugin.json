@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "readme": "readme.md",
   "icon": "icon.png",
-  "files": [],
+  "files": ["./src/main.js","./src/worker.js"],
   "author": {
     "name": "",
     "email": "",

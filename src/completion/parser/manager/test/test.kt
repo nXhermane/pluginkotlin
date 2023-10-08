@@ -38,8 +38,6 @@ class yello(h:String) {
 fun main(ht: String) {
 	fun oui(jut:String) {
 		println("ju")
-	}
-	
 	val x = 5
 	val y = 10
 	val sum = x + y  

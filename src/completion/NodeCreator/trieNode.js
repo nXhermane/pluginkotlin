@@ -11,9 +11,19 @@ export default class Trie {
   constructor() {
     this.root = new TrieNode();
   }
-
+	check(word,element){
+		const result = search(word)
+		for(let i=0;i<result.length;i++){
+			const condition=(result[i]==element)
+			if(condition){
+				this.delete(result[i].name)
+			}
+		}
+	}
   insert(word, element) {
+	
     const normalizedWord = Diacritics.remove(word).toLowerCase(); // Normalisation
+    //this.check(word,element)
     let node = this.root;
     for (let i = 0; i < normalizedWord.length; i++) {
       let char = normalizedWord[i];
@@ -85,24 +95,3 @@ export default class Trie {
   }
 }
 
-// // Créez une instance de Trie.
-// const trie = new Trie();
-// let data=fs.readFileSync("./data.json","utf-8")
-// data=JSON.parse(data)
-// for(let i=0; i<data.length ; i++){
-//	trie.insert(data[i].name,data[i])
-// }
-// // Insérez des mots et associez des éléments.
-// trie.insert('chat', { name: 'you' });
-// trie.insert('chien', 'animal2');
-// trie.insert('cheval', 'animal3');
-
-// // Recherchez des éléments avec un préfixe donné.
-// const prefixToSearch = 'b';
-// const results = trie.search(prefixToSearch);
-
-// if (results.length > 0) {
-//  console.log(`Éléments avec le préfixe "${prefixToSearch}":`, results);
-// } else {
-//  console.log(`Aucun élément avec le préfixe "${prefixToSearch}" trouvé.`);
-// }

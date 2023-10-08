@@ -2,53 +2,55 @@ const { exec } = require('child_process');
 const path = require('path');
 
 module.exports = (env, options) => {
-  const { mode = 'development' } = options;
-  
-  const rules = [
-    {
-      test: /\.m?js$/,
-      use: [
-        'html-tag-js/jsx/tag-loader.js',
-        {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env'],
-          },
-        },
-      ],
-    }
-  ];
+	const { mode = 'development' } = options;
 
-  const main = {
-    mode,
-    entry: {
-      main: './src/main.js',
-    },
-    output: {
-      path: path.resolve(__dirname, 'dist'),
-      filename: '[name].js',
-      chunkFilename: '[name].js',
-    },
-    module: {
-      rules,
-    },
-    plugins: [
-      {
-        apply: (compiler) => {
-          compiler.hooks.afterDone.tap('pack-zip', () => {
-            // run pack-zip.js
-            exec('node .vscode/pack-zip.js', (err, stdout, stderr) => {
-              if (err) {
-                console.error(err);
-                return;
-              }
-              console.log(stdout);
-            });
-          });
-        }
-      }
-    ],
-  };
+	const rules = [
+		{
+			test: /\.m?js$/,
+			use: [
+				'html-tag-js/jsx/tag-loader.js',
+				{
+					loader: 'babel-loader',
+					options: {
+						presets: ['@babel/preset-env'],
+					},
+				},
+			],
+		}
+	];
 
-  return [main];
+	const main = {
+		mode,
+		entry: {
+			main: './src/main.js',
+		},
+		output: {
+			path: path.resolve(__dirname, 'dist'),
+			filename: '[name].js',
+			chunkFilename: '[name].js',
+			// library: 'MyLibrary', // Nom de la bibliothèque globale
+			// libraryTarget: 'umd', // Format de bibliothèque universel pour permettre l'utilisation dans divers environnements
+		},
+		module: {
+			rules,
+		},
+		plugins: [
+			{
+				apply: (compiler) => {
+					compiler.hooks.afterDone.tap('pack-zip', () => {
+						// run pack-zip.js
+						exec('node .vscode/pack-zip.js', (err, stdout, stderr) => {
+							if (err) {
+								console.error(err);
+								return;
+							}
+							console.log(stdout);
+						});
+					});
+				}
+			}
+		],
+	};
+
+	return [main];
 }

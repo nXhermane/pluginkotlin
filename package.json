@@ -34,6 +34,7 @@
   "scripts": {
     "build": "webpack",
     "build-release": "webpack --mode production",
+    "build-script":"webpack --config webpack.config1.js",
     "start-dev": "node .vscode/start-dev",
     "antlr4ts": "antlr4ts -visitor res/KotlinParser.g4"
   },
