@@ -16,7 +16,7 @@ class AcodePlugin {
 	counter = 0
 	worker = null
 	baseUrl = ""
-	loaded=false
+	loaded = false
 	debut = true
 	async init() {
 		alert('hello world')
@@ -33,6 +33,7 @@ class AcodePlugin {
 				this.complet = new CompletionTrie()
 				this.commencer()
 			} else {
+				this.worker.terminate();
 				editorManager.editor.setOptions({
 					enableBasicAutocompletion: true,
 					enableSnippets: true,
@@ -40,7 +41,7 @@ class AcodePlugin {
 				});
 			}
 		});
-		
+
 	}
 	async commencer() {
 		const { editor } = editorManager
@@ -51,18 +52,49 @@ class AcodePlugin {
 			this.complet.insert(result.data)
 			console.log(result.errorArray)
 		})
-				this.worker.postMessage(editor.getValue());
-			
+		this.worker.postMessage(editor.getValue());
+
 		editor.addEventListener('input', async () => {
 			if (this.condition) {
-				// const session = editor.getSession();
-				//				for (let i = 0; i <= session.getLength(); i++) {
-				//					const tokens = session.getTokens(i)
-				//					console.log(tokens)
-				//				}
-				// await this.complet.analyse(editor.getValue())
-				// await this.complet.extract()
-				// console.log("on change permetant de recuperer les element  activer")
+				const tokenArray = []
+				const session = editor.getSession();
+				for (let i = 0; i < session.getLength(); i++) {
+					const tokens = session.getTokens(i);
+					for (let j = 0; j < tokens.length; j++) {
+						const token = {
+							name: tokens[j].value,
+							type: tokens[j].type
+						};
+						if (
+							token.type === "identifier" ||
+							token.type === "keyword.other.kotlin" ||
+							token.type === "entity.name.variable.kotlin" ||
+							token.type === "storage.type.buildin.kotlin" ||
+							token.type === "variable.parameter.function.kotlin" ||
+							token.type === "string" ||
+							token.type === "constant.numeric.kotlin" ||
+							token.type === "keyword"
+						) {
+							tokenArray.push(token);
+						}
+					}
+				}
+				const uniqueArray = Array.from(new Set(tokenArray.map(JSON.stringify)), JSON.parse);
+				async function insertion(array,complet){
+					for(let i=0;i<array.length;i++){
+						const resultArray= await complet.search(array[i].name)
+						for(let j=0;j<resultArray.length;j++){
+							if(resultArray[j].hasOwnProperty('scope')){
+								array.splice(i,1)
+							}
+						}
+					}
+					return array
+				}
+				const complet=this.complet
+				this.complet.insert(await insertion(uniqueArray,complet))
+
+
 				if (this.counter == 10) {
 					// Écoutez les messages du worker
 					this.counter = 0
@@ -88,7 +120,27 @@ class AcodePlugin {
 				}
 				const prefix = currentLine.substring(lastNonAlphabeticCharIndex + 1, cursorColumn);
 				if (prefix != '') {
-					console.log(await this.complet.search(prefix))
+					const session = editor.getSession();
+					const searchArray = await this.complet.search(prefix)
+					for (let i = 0; i < session.getLength(); i++) {
+						const tokens = session.getTokens(i)
+						for (let j = 0; j < tokens.length; j++) {
+							for (let s = 0; s < searchArray.length; s++) {
+								if (searchArray[s].name === tokens[j].value) {
+									console.log(searchArray[s], tokens[j])
+									const line = cursorLine - i
+									const column = cursorColumn - j
+									if (!searchArray[s].hasOwnProperty('line')) {
+										searchArray[s].line = []
+										searchArray[s].line.push(line)
+									} else {
+										searchArray[s].line.push(line)
+									}
+									console.log(searchArray[s])
+								}
+							}
+						}
+					}
 				}
 			}
 		})
