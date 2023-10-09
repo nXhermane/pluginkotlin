@@ -6,8 +6,9 @@ fun beto(ht: String, h2: Int) {
 	fun yest(jut:String) {
 		println("ju")
 	}
-	
+
 }
+
 class yello(h:String) {
 	class bb(v:String,b:Int) {
 		class bbn(nv:String,bn:Int) {
@@ -38,17 +39,18 @@ class yello(h:String) {
 fun main(ht: String) {
 	fun oui(jut:String) {
 		println("ju")
-	val x = 5
-	val y = 10
-	val sum = x + y  
-	var a = 8
-	if (true) {
-	beto("exemple", 42)
+		val x = 5
+		val y = 10
+		val sum = x + y
+		var a = 8
+		if (true) {
+			beto("exemple", 42)
+		}
+		if (sum > 10) {
+			println("La somme est supérieure à 10.")
+		} else {
+			println("La somme est inférieure ou égale à 10")
+		}
+
 	}
-	if (sum > 10) {
-		println("La somme est supérieure à 10.")
-	} else {
-		println("La somme est inférieure ou égale à 10")
-	}
-	
 }

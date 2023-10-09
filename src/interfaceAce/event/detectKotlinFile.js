@@ -14,7 +14,8 @@ export default function detectKotlinFileEvent(instance,editorManager){
 				instance.complet = new CompletionTrie()
 				instance.commencer()
 			} else {
-				instance.worker.terminate();
+				instance.worker?.terminate();
+				instance.popup?.hide()
 				editorManager.editor.setOptions({
 					enableBasicAutocompletion: true,
 					enableSnippets: true,

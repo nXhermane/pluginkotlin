@@ -14,7 +14,7 @@ import { CompletionTrie } from './completion/index.js';
 import detectKotlinFileEvent from './interfaceAce/event/detectKotlinFile.js';
 import editorInputEventHandlers from './interfaceAce/event/editorInputEventHandlers.js';
 import editorChangeEvent from './interfaceAce/event/editorChangeEvent.js';
-
+import suggestionPopup from './interfaceAce/popup/SuggestionPopup/suggestionPopup.js';
 class AcodePlugin {
 	counter = 0
 	worker = null
@@ -24,6 +24,17 @@ class AcodePlugin {
 	complet = null
 	async init() {
 		alert('hello world')
+		this.popup = new suggestionPopup(this.baseUrl,editorManager.editor)
+		
+		
+		editorManager.editor.on('gutterkeydown',()=>{
+			alert("oui c'est du move")
+		})
+		
+
+	// 	this.popup.addOption(`${this.baseUrl}send_blue.svg`, 'println', 'Property', '~function to print');
+	 //	this.popup.show();
+
 		detectKotlinFileEvent(this, editorManager)
 	}
 	async commencer() {

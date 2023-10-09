@@ -22,7 +22,7 @@ export default class Trie {
 	}
   insert(word, element) {
 	
-    const normalizedWord = Diacritics.remove(word).toLowerCase(); // Normalisation
+    const normalizedWord = word//Diacritics.remove(word).toLowerCase(); // Normalisation
     //this.check(word,element)
     let node = this.root;
     for (let i = 0; i < normalizedWord.length; i++) {
@@ -37,7 +37,7 @@ export default class Trie {
   }
 
   search(prefix) {
-    const normalizedPrefix = Diacritics.remove(prefix).toLowerCase(); // Normalisation
+    const normalizedPrefix = prefix//Diacritics.remove(prefix).toLowerCase(); // Normalisation
     let node = this.root;
     let results = [];
 
