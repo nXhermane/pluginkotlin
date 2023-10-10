@@ -5,9 +5,11 @@ export default class suggestionPopup {
 	$borderSize = 1
 	$maxPixelHeight = null
 	isTopdown = null
-	constructor(baseUrl,editor) {
+	positionBlocked = true
+	cursorPosition = null
+	constructor(baseUrl, editor) {
 		this.baseUrl = baseUrl
-		this.editor=editor
+		this.editor = editor
 		this.$style = tag("link", {
 			rel: "stylesheet",
 			href: this.baseUrl + "css/style.css",
@@ -54,32 +56,59 @@ export default class suggestionPopup {
 		this.addEvent(this.$SuggestionOption)
 	}
 	show() {
-		this.$PopupSession.style.display = 'flex'
+		const cursorElement = document.querySelector('.ace_cursor')
+		const rect = cursorElement.getBoundingClientRect()
+		this.navigatPopup(rect)
+		const cursorPosition = this.editor.getCursorPosition();
+		const cursorLine = cursorPosition.row;
+		if (this.cursorPosition === cursorLine) {
+			this.$PopupSession.style.display = 'flex'
+		}else{
+			console.log('hide')
+			this.hide()
+		}
 	}
 
 	navigatPopup(rect) {
-		
+		if (!this.positionBlocked) {
+			console.log('position bloker')
+			return
+		}
+		const cursorPosition = this.editor.getCursorPosition();
+		const cursorLine = cursorPosition.row;
+		this.cursorPosition=cursorLine
 		const screenWidth = window.innerWidth
 		const screenHeight = window.innerHeight
 		let left = rect.left;
-		let top=rect.top
+		let top = rect.top
 		const bottom = screenHeight - rect.bottom;
-
-		//this.$PopupSession.style.transform=`translateX(${rect.x}px)`
-		// if ((right - this.$PopupSession.offsetWidth) >= 0) {
-		//			this.$PopupSession.style.left = `${left}px`
-		//		}
-
-		
-		if (left + this.$PopupSession.offsetWidth > screenWidth)
-			left = screenWidth - this.$PopupSession.offsetWidth;
-
+		const popupWidth = 280
+		const maxLines = 8
+		const lineHeight = 15
+		if (left + popupWidth >= screenWidth + 20) { left = screenWidth - popupWidth }
 		this.$PopupSession.style.left = left + "px";
-		if ((bottom - this.$PopupSession.offsetHeight) >= 100) {
-			this.$PopupSession.style.top = `${top - rect.height + 5}px`
+		console.log("left", left, "top", top, "offsetWidth", this.$PopupSession.offsetWidth, "offsetHeight", this.$PopupSession.offsetHeight)
+		console.log('screenHeight', screenHeight, "screenWidth", screenWidth, 'rectbotom', rect.bottom, 'bottom', bottom)
+		var allowTopdown = top > screenHeight / 2
+		var maxH = maxLines * lineHeight * 1.4;
+		console.log(maxH)
+		if (allowTopdown) {
+			this.$PopupSession.style.top = "";
+			this.$PopupSession.style.bottom = screenHeight - top + "px"
 		} else {
-			this.$PopupSession.style.top = `${top - this.$PopupSession.offsetHeight - (2 * rect.height) + 1.5}px`
+			this.$PopupSession.style.top = (top + rect.height) + "px"
+			this.$PopupSession.style.bottom = ""
+			console.log('condition false')
 		}
+		//		var maxH = maxLines * lineHeight * 1.4;
+
+
+
+		// if ((bottom - this.$PopupSession.offsetHeight) >= 100 && !allowTopdown) {
+		//			this.$PopupSession.style.top = `${top - rect.height + 5}px`
+		//		} else {
+		//			this.$PopupSession.style.top = `${top - this.$PopupSession.offsetHeight - (2 * rect.height) + 1.5}px`
+		//		}
 
 	}
 	addDataToPopup(dataArray) {

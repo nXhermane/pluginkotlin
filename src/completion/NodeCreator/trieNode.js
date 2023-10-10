@@ -93,5 +93,50 @@ export default class Trie {
 
     return false;
   }
-}
+	/*  searchWithCorrection(prefix, maxDistance) {
+    const normalizedPrefix = prefix.toLowerCase(); // Normalisation
+    let node = this.root;
+    let results = [];
 
+    for (let i = 0; i < normalizedPrefix.length; i++) {
+      let char = normalizedPrefix[i];
+      if (!node.children[char]) {
+        return results;
+      }
+      node = node.children[char];
+    }
+
+    // Récupérez tous les éléments possibles depuis ce point
+    const allPossibleElements = [];
+    this.collectElementsWithPrefix(node, allPossibleElements);
+
+    // Triez les éléments par proximité au préfixe
+    const sortedResults = allPossibleElements.sort((a, b) => {
+      const distanceA = natural.DiceCoefficient(a, normalizedPrefix);
+      const distanceB = natural.DiceCoefficient(b, normalizedPrefix);
+      return distanceB - distanceA; // Tri par proximité décroissante
+    });
+
+    // Filtrez les résultats en fonction de la distance maximale autorisée
+    results = sortedResults.filter((element) => {
+      const distance = natural.DiceCoefficient(element, normalizedPrefix);
+      return distance >= maxDistance;
+    });
+
+    return results;
+  }*/
+}
+/*
+const trie = new Trie();
+trie.insert("main", "Main Element");
+trie.insert("man", "Man Element");
+trie.insert("mains", "Mains Element");
+trie.insert("mainsn", "Mainsn Element");
+
+// Effectuez une recherche avec correction orthographique pour le préfixe "mna"
+const prefix = "mna";
+const maxDistance = 0.5; // Définissez votre propre valeur de distance maximale
+const suggestions = trie.searchWithCorrection(prefix, maxDistance);
+
+console.log("Suggestions pour le préfixe", prefix, ":", suggestions);
+*/

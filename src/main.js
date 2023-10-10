@@ -15,6 +15,8 @@ import detectKotlinFileEvent from './interfaceAce/event/detectKotlinFile.js';
 import editorInputEventHandlers from './interfaceAce/event/editorInputEventHandlers.js';
 import editorChangeEvent from './interfaceAce/event/editorChangeEvent.js';
 import suggestionPopup from './interfaceAce/popup/SuggestionPopup/suggestionPopup.js';
+import editorBlurEvent from './interfaceAce/event/editorBlurEvent.js'
+import editorFocusEvent from './interfaceAce/event/editorFocusEvent.js'
 class AcodePlugin {
 	counter = 0
 	worker = null
@@ -22,6 +24,7 @@ class AcodePlugin {
 	loaded = false
 	debut = true
 	complet = null
+	getPrefixIsPossible=true
 	async init() {
 		alert('hello world')
 		this.popup = new suggestionPopup(this.baseUrl,editorManager.editor)
@@ -47,8 +50,13 @@ class AcodePlugin {
 			console.log(result.errorArray)
 		})
 		this.worker.postMessage(editor.getValue());
+		editorFocusEvent(this,editor)
+		editorBlurEvent(this,editor)
 		editorInputEventHandlers(this, editor)
 		editorChangeEvent(this, editor)
+		editor.container.querySelector('textarea.ace_text-input').addEventListener('focus',()=>{
+			console.log("yest input")
+		})
 	}
 	async destroy() {
 	}
