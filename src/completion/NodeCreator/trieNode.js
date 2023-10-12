@@ -1,142 +1,205 @@
-import Diacritics  from 'diacritics';
+
+//import { levenshteinEditDistance } from 'levenshtein-edit-distance';
+import stringSimilarity from 'string-similarity'
 class TrieNode {
-  constructor() {
-    this.children = {};
-    this.isEndOfWord = false;
-    this.element = null;
-  }
+	constructor() {
+		this.children = {};
+		this.isEndOfWord = false;
+		this.element = null;
+	}
 }
 
 export default class Trie {
-  constructor() {
-    this.root = new TrieNode();
-  }
-	check(word,element){
+	constructor() {
+		this.root = new TrieNode();
+	}
+	check(word, element) {
 		const result = search(word)
-		for(let i=0;i<result.length;i++){
-			const condition=(result[i]==element)
-			if(condition){
+		for (let i = 0; i < result.length; i++) {
+			const condition = (result[i] == element)
+			if (condition) {
 				this.delete(result[i].name)
 			}
 		}
 	}
-  insert(word, element) {
-	
-    const normalizedWord = word//Diacritics.remove(word).toLowerCase(); // Normalisation
-    //this.check(word,element)
-    let node = this.root;
-    for (let i = 0; i < normalizedWord.length; i++) {
-      let char = normalizedWord[i];
-      if (!node.children[char]) {
-        node.children[char] = new TrieNode();
-      }
-      node = node.children[char];
-    }
-    node.isEndOfWord = true;
-    node.element = element;
-  }
+	insert(word, element) {
 
-  search(prefix) {
-    const normalizedPrefix = prefix//Diacritics.remove(prefix).toLowerCase(); // Normalisation
-    let node = this.root;
-    let results = [];
+		const normalizedWord = word
+		let node = this.root;
+		for (let i = 0; i < normalizedWord.length; i++) {
+			let char = normalizedWord[i];
+			if (!node.children[char]) {
+				node.children[char] = new TrieNode();
+			}
+			node = node.children[char];
+		}
+		node.isEndOfWord = true;
+		node.element = element;
+	}
 
-    for (let i = 0; i < normalizedPrefix.length; i++) {
-      let char = normalizedPrefix[i];
-      if (!node.children[char]) {
-        return results;
-      }
-      node = node.children[char];
-    }
-    this.collectElementsWithPrefix(node, results);
-    return results;
-  }
+	search(prefix) {
+		const normalizedPrefix = prefix
+		let node = this.root;
+		let results = [];
 
-  collectElementsWithPrefix(node, results) {
-    if (node.isEndOfWord) {
-      results.push(node.element);
-    }
+		for (let i = 0; i < normalizedPrefix.length; i++) {
+			let char = normalizedPrefix[i];
+			if (!node.children[char]) {
+				return results;
+			}
+			node = node.children[char];
+		}
+		this.collectElementsWithPrefix(node, results);
+		return results;
+	}
 
-    for (let char in node.children) {
-      this.collectElementsWithPrefix(node.children[char], results);
-    }
-  }
+	collectElementsWithPrefix(node, results) {
+		if (node.isEndOfWord) {
+			results.push(node.element);
+		}
 
-  delete(word) {
-    this.deleteRecursive(this.root, word, 0);
-  }
+		for (let char in node.children) {
+			this.collectElementsWithPrefix(node.children[char], results);
+		}
+	}
 
-  deleteRecursive(node, word, index) {
-    if (index === word.length) {
-      if (node.isEndOfWord) {
-        node.isEndOfWord = false;
-        node.element = null;
-      }
+	delete(word) {
+		this.deleteRecursive(this.root, word, 0);
+	}
 
-      if (Object.keys(node.children).length === 0) {
-        return true;
-      }
-      return false;
-    }
+	deleteRecursive(node, word, index) {
+		if (index === word.length) {
+			if (node.isEndOfWord) {
+				node.isEndOfWord = false;
+				node.element = null;
+			}
 
-    const char = word[index];
-    if (!node.children[char]) {
-      return false;
-    }
+			if (Object.keys(node.children).length === 0) {
+				return true;
+			}
+			return false;
+		}
 
-    const shouldDeleteChild = this.deleteRecursive(node.children[char], word, index + 1);
+		const char = word[index];
+		if (!node.children[char]) {
+			return false;
+		}
 
-    if (shouldDeleteChild) {
-      delete node.children[char];
-      return Object.keys(node.children).length === 0;
-    }
+		const shouldDeleteChild = this.deleteRecursive(node.children[char], word, index + 1);
 
-    return false;
-  }
-	/*  searchWithCorrection(prefix, maxDistance) {
-    const normalizedPrefix = prefix.toLowerCase(); // Normalisation
-    let node = this.root;
-    let results = [];
+		if (shouldDeleteChild) {
+			delete node.children[char];
+			return Object.keys(node.children).length === 0;
+		}
 
-    for (let i = 0; i < normalizedPrefix.length; i++) {
-      let char = normalizedPrefix[i];
-      if (!node.children[char]) {
-        return results;
-      }
-      node = node.children[char];
-    }
+		return false;
+	}
+	getAllWords() {
+		const words = [];
+		this.collectWordsRecursive(this.root, '', words);
+		return words;
+	}
 
-    // Récupérez tous les éléments possibles depuis ce point
-    const allPossibleElements = [];
-    this.collectElementsWithPrefix(node, allPossibleElements);
+	collectWordsRecursive(node, currentWord, words) {
+		if (!node) return;
 
-    // Triez les éléments par proximité au préfixe
-    const sortedResults = allPossibleElements.sort((a, b) => {
-      const distanceA = natural.DiceCoefficient(a, normalizedPrefix);
-      const distanceB = natural.DiceCoefficient(b, normalizedPrefix);
-      return distanceB - distanceA; // Tri par proximité décroissante
-    });
+		if (node.isEndOfWord) {
+			words.push(currentWord);
+		}
 
-    // Filtrez les résultats en fonction de la distance maximale autorisée
-    results = sortedResults.filter((element) => {
-      const distance = natural.DiceCoefficient(element, normalizedPrefix);
-      return distance >= maxDistance;
-    });
-
-    return results;
-  }*/
+		for (let char in node.children) {
+			this.collectWordsRecursive(
+				node.children[char],
+				currentWord + char,
+				words
+			);
+		}
+	}
+	// searchWithCorrection(prefix, maxDistance = 3) {
+// 		const normalizedPrefix = prefix.toLowerCase();
+// 		const suggestions = [];
+// 		this.searchWithCorrectionRecursive(this.root, '', normalizedPrefix, maxDistance, suggestions);
+// 
+// 		const elements = suggestions.map((suggestion) => {
+// 			const node = this.getNodeWithWord(suggestion);
+// 			return node ? node.element : null;
+// 		});
+// 
+// 		return elements;
+// 	}
+// 
+// 	searchWithCorrectionRecursive(node, currentWord, query, maxDistance, suggestions) {
+// 		if (!node) return;
+// 
+// 		const distance = levenshteinEditDistance(currentWord, query);
+// 
+// 		if (node.isEndOfWord && distance <= maxDistance) {
+// 			suggestions.push(currentWord);
+// 		}
+// 
+//		for (let char in node.children) {
+//			this.searchWithCorrectionRecursive(
+//				node.children[char],
+//				currentWord + char,
+//				query,
+//				maxDistance,
+//				suggestions
+//			);
+//		}
+//	}
+searchWithCorrection(prefix, maxDistance) {
+  const normalizedPrefix = prefix.toLowerCase();
+  const suggestions = [];
+  this.searchWithCorrectionRecursive(this.root, '', normalizedPrefix, maxDistance, suggestions);
+  return suggestions;
 }
-/*
-const trie = new Trie();
-trie.insert("main", "Main Element");
-trie.insert("man", "Man Element");
-trie.insert("mains", "Mains Element");
-trie.insert("mainsn", "Mainsn Element");
 
-// Effectuez une recherche avec correction orthographique pour le préfixe "mna"
-const prefix = "mna";
-const maxDistance = 0.5; // Définissez votre propre valeur de distance maximale
-const suggestions = trie.searchWithCorrection(prefix, maxDistance);
+searchWithCorrectionRecursive(node, currentWord, query, maxDistance, suggestions) {
+  if (!node) return;
 
-console.log("Suggestions pour le préfixe", prefix, ":", suggestions);
-*/
+  if (node.isEndOfWord) {
+    const similarity = stringSimilarity.compareTwoStrings(currentWord, query);
+    if (similarity >= 0.1) { // Vous pouvez ajuster ce seuil en fonction de la précision souhaitée
+      suggestions.push(node.element);
+    }
+  }
+
+  for (let char in node.children) {
+    this.searchWithCorrectionRecursive(
+      node.children[char],
+      currentWord + char,
+      query,
+      maxDistance,
+      suggestions
+    );
+  }
+}
+
+	getNodeWithWord(word) {
+		let node = this.root;
+		for (let i = 0; i < word.length; i++) {
+			const char = word[i];
+			if (!node.children[char]) {
+				return null;
+			}
+			node = node.children[char];
+		}
+		return node;
+	}
+}
+// const trie = new Trie();
+// 
+// //Insérez des mots
+// trie.insert('apple', 'Apple Element');
+// trie.insert('a', 'a Element');
+// trie.insert('banana', 'Banana Element');
+// trie.insert('cherry', 'Cherry Element');
+// trie.insert('mv', "oui");
+// 
+// //Effectuez une recherche avec correction
+// const prefix = 'Ap'; // Un préfixe incorrect
+// const maxDistance = 3; // Distance maximale autorisée
+// 
+// const suggestions = trie.searchWithCorrection(prefix);
+// 
+// console.log('Suggestions pour le préfixe', prefix, ':', suggestions);

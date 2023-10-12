@@ -1,11 +1,11 @@
 {
-  "id": "kotlin.plugin",
-  "name": "kotlin plugin",
+  "id": "kotlin.autocompletion",
+  "name": "kotlin autocompletion",
   "main": "dist/main.js",
   "version": "1.0.0",
   "readme": "readme.md",
-  "icon": "icon.png",
-  "files": ["./src/main.js","./src/worker.js"],
+  "icon": "kotlin_pluhin.jpg",
+  "files": ["./src/main.js"],
   "author": {
     "name": "",
     "email": "",

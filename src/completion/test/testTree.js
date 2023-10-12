@@ -1,11 +1,5 @@
 
-import GenerateTree from './../astGenerator.js'
-import KotlinLexer from './../../antlr4_res//KotlinLexer.js';
-import KotlinParser from './../../antlr4_res/KotlinParser.js';
-import KotlinParserVisitor from './../../antlr4_res/KotlinParserVisitor.js';
-import CustomErrorListener from './../customClass/CustomErrorListener.js'
-import CustomVisitor from './../customClass/CustomVisitor.js'
-import Scope from './../../model/scopeNode.js'
+import { GenerateAstTree, AstVisitor, ErrorListener, Lexer, Parser, Extraction } from './../parser/index.js'
 const sourceCode = `
 import huun.jdu.user as hellol
 import huun.vue.userr
@@ -294,24 +288,18 @@ fun mainn() {
 `
 
 
-export default class tree {
-	
-	constructor() {
-		this.depart=Date.now()
-		this.newTree = new GenerateTree(sourceCode)
-			.applyLexer(KotlinLexer)
-			.applyParser(KotlinParser)
-			.applyCustomError(CustomErrorListener)
-			.generate().applyVisitor(CustomVisitor).build()
-			this.fin=Date.now()
-			
-			
-	}
+
+
+async function test() {
+	let newTree = new GenerateAstTree(sourceCode)
+		.applyLexer(Lexer)
+		.applyParser(Parser)
+		.applyCustomError(ErrorListener)
+		.generate().applyVisitor(AstVisitor).build()
+	const testExtract = new Extraction()
+	const data = await testExtract.extract(newTree)
+	console.log(data)
+
 }
-const testTree=new tree()
-const testScope=new Scope()
-testScope.extractClassArray(testTree.newTree.visitor.classDeclarationInfo)
-testScope.extractFunctionArray(testTree.newTree.visitor.functionDeclarationInfo)
-testScope.extractVariableArray(testTree.newTree.visitor.variableDeclarationInfo)
-testScope.extractImportArray(testTree.newTree.visitor.importInfo)
-console.log(testScope.data)
+
+test()
