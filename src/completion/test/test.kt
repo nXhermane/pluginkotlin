@@ -1,5 +1,3 @@
-
-
 import youy.y.uo as hello
 
 fun beto(ht: String, h2: Int) {
@@ -22,6 +20,7 @@ class yello(h:String) {
 			fun uuu() {}
 		}
 	}
+
 }
 
 
@@ -56,7 +55,10 @@ fun main(ht: String) {
 			println("La somme à 10")
 		}
 	}
+
 }
-class yoyo(hy:String){
+class yoyo(hy:String) {
 	var valo="valbog"
 }
+class hello (var valo = "hello")
+const wao=['yello',]
