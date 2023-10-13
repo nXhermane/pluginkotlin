@@ -5,7 +5,7 @@ const settings = acode.require("settings");
 import detectKotlinFileEvent from "./ace/event/detectKotlinFileEvent.js";
 import editorInputEvent from "./ace/event/editorInputEvent.js";
 import editorKeyDownAndUpEvent from "./ace/event/editorKeyDownAndUpEvent.js";
-
+import workerManager from './ace/workerManager/workerManager.js'
 class KotlinPlugin {
    // kotlin file detect condition
    detectKotlinFileCondition = false;
@@ -17,19 +17,17 @@ class KotlinPlugin {
    firtInsertTokens = false;
    async init() {
       detectKotlinFileEvent(this, editorManager);
-      console.log(themes.list());
+     
       var primaryColor=localStorage.getItem('__primary_color')
-      console.log(primaryColor)
    }
    async start() {
       this.firtInsertTokens = false;
       const { editor } = editorManager;
       this.Worker = new Worker(`${this.baseUrl}worker.js`);
+      const instance = this
       this.Worker.addEventListener("message", async () => {
          const { type, info } = JSON.parse(event.data);
-         if (type === "analyse/extract") {
-            await this.WordTree.insert(info.data);
-         }
+         workerManager(instance,type,info)
       });
       // Submit code source to worker and get result to insert on word Manager tree
       this.Worker.postMessage({

@@ -37,6 +37,7 @@ class yello(h:String) {
 		fun uuu() {}
 	}
 }
+
 @override
 fun main(ht: String) {
 	fun oui(jut:String) {
@@ -55,4 +56,7 @@ fun main(ht: String) {
 			println("La somme à 10")
 		}
 	}
+}
+class yoyo(hy:String){
+	var valo="valbog"
 }

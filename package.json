@@ -5,7 +5,6 @@
   "main": "dist/main.js",
   "repository": "https://github.com/deadlyjack/acode-plugin.git",
   "author": "Ajit <me@ajitkumar.dev>",
-  
   "license": "MIT",
   "dependencies": {
     "antlr4": "^4.13.1",
@@ -16,8 +15,10 @@
     "knex": "^2.5.1",
     "levenshtein-edit-distance": "^3.0.1",
     "node-fetch": "^3.3.2",
+    "pouchdb": "^8.0.1",
     "prettier": "^3.0.3",
     "prettier-plugin-kotlin": "^2.1.0",
+    "sql.js": "^1.8.0",
     "sqlite": "^5.0.1",
     "sqlite3": "^5.1.6",
     "string-similarity": "^4.0.4"
@@ -38,7 +39,7 @@
   "scripts": {
     "build": "webpack",
     "build-release": "webpack --mode production",
-    "build-script": "webpack --config webpack.config1.js",
+    "build-script": "webpack --config webpack.config2.js",
     "start-dev": "node .vscode/start-dev",
     "antlr4ts": "antlr4ts -visitor res/KotlinParser.g4"
   },

@@ -8,7 +8,7 @@ const db = knex({
 });
 
 
-class daoManager {
+export default class daoManager {
 	constructor(db) {
 		this.db = db
 		this.searchkeyword("has")
