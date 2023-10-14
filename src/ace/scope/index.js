@@ -42,7 +42,7 @@ export default function scopeManager(editor) {
                   let sameLineVerifyCount = 1;
                   let sameLine = false;
                   let tokenAssociateIndex = 0;
-                  let tokenValueIndex=j
+                  let tokenValueIndex = j;
                   for (let z = j + 1; z < tokens.length; z++) {
                      if (tokens[z].value === tokenValue) {
                         sameLineVerifyCount++;
@@ -55,7 +55,23 @@ export default function scopeManager(editor) {
                         }
                      }
                   }
-
+                  let tableOfBlock = [];
+                  for (let z = 0; z < tokens.length; z++) {
+                     if (tokens[z].value === tokenValue) {
+                        if (z !== tokenValueIndex) {
+                           tableOfBlock.push({ state: false, type: 1 });
+                        } else {
+                           tableOfBlock.push({ state: true, type: 1 });
+                        }
+                     } else if (tokens[z].value === associateType) {
+                        if (z !== tokenAssociateIndex) {
+                           tableOfBlock.push({ state: false, type: 0 });
+                        } else {
+                           tableOfBlock.push({ state: true, type: 0 });
+                        }
+                     }
+                  }
+							console.log(tableOfBlock)
                   coloration(
                      editor,
                      i,
@@ -63,7 +79,8 @@ export default function scopeManager(editor) {
                      tokenValueIndex,
                      associateType,
                      tokenAssociateIndex,
-                     sameLine
+                     sameLine,
+                     tableOfBlock
                   );
                   return;
                }
