@@ -6,7 +6,7 @@ import detectKotlinFileEvent from "./ace/event/detectKotlinFileEvent.js";
 import editorInputEvent from "./ace/event/editorInputEvent.js";
 import editorKeyDownAndUpEvent from "./ace/event/editorKeyDownAndUpEvent.js";
 import workerManager from './ace/workerManager/workerManager.js'
-import editorChangeSelectionEvent from "./ace/event/editorChangeSelectionEvent.js";
+import editorChangeSelectionCursorEvent from "./ace/event/editorChangeSelectionCursorEvent.js";
 class KotlinPlugin {
    // kotlin file detect condition
    detectKotlinFileCondition = false;
@@ -39,8 +39,9 @@ class KotlinPlugin {
       editorInputEvent(this, editor);
       // Add keyDown And KeyUp event
       editorKeyDownAndUpEvent(this, editor);
-      // Add changeSelection ecent 
-      editorChangeSelectionEvent(this,editor)
+      // Add changeCursor  event to session selection
+      editorChangeSelectionCursorEvent(this,editor)
+      
    }
    async destroy() {}
 }

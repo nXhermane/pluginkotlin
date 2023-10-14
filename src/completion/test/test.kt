@@ -52,7 +52,7 @@ fun main(ht: String) {
 		if (sum > 10) {
 			println("La somme est supérieure à 10.")
 		} else {
-			println("La somme à 10")
+				println("L a  somme à 10")
 		}
 	}
 
@@ -60,5 +60,7 @@ fun main(ht: String) {
 class yoyo(hy:String) {
 	var valo="valbog"
 }
-class hello (var valo = "hello")
-const wao=['yello',]
+class hello (var valo = "hello"
+
+)
+const wao=['yello',] ((2*2)+1)

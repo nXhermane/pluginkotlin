@@ -1,4 +1,12 @@
-export default function coloration(editor, line,type) {
+export default function coloration(
+   editor,
+   line,
+   type,
+   typeIndex,
+   associateType,
+   associateTypeIndex,
+   sameLine
+) {
    const lineContainer = editor.container.querySelector(
       "div.ace_text-layer.ace_layer"
    ).childNodes;
@@ -6,24 +14,31 @@ export default function coloration(editor, line,type) {
       "div.ace_layer.ace_gutter-layer"
    ).childNodes;
 
+   console.log(type, typeIndex, associateType, associateTypeIndex, sameLine);
    for (let i = 0; i < lineNumberContainer.length; i++) {
       const lineNumber = lineNumberContainer[i].innerText;
       if (parseInt(lineNumber) === line + 1) {
-        const scopeLine=lineContainer[i]
-        const color=  window.getComputedStyle(scopeLine.querySelector('.ace_lparen')).color
-        const style=tag("style")
-        style.innerHTML=`
+         const scopeLine = lineContainer[i];
+         const color = window.getComputedStyle(
+            scopeLine.querySelector(".ace_paren")
+         ).color;
+         const style = tag("style");
+         style.innerHTML = `
          .kotlin-plugin-scope{
 			text-decoration:underline;
 			text-decoration-color:${color};
 			text-underline-offset: 4px;
 			text-decoration-thickness: 0.5px;
         }
-        `
-        
-        console.log(color)
-        document.head.append(style)
-        scopeLine.classList.add("kotlin-plugin-scope")
+        `;
+         if (sameLine) {
+            const sameLineChild=scopeLine.querySelector('div.ace_line').childNodes
+            const indentation=scopeLine.querySelectorAll('span.ace_indent-guide').length || 0
+            console.log(sameLineChild[typeIndex+indentation],sameLineChild[associateTypeIndex+indentation])
+         }
+
+         document.head.append(style);
+         scopeLine.classList.add("kotlin-plugin-scope");
       }
    }
 }
