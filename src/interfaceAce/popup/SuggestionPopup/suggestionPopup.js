@@ -16,14 +16,14 @@ export default class suggestionPopup {
       });
       document.head.append(this.$style);
       this.$PopupSession = tag("section", {
-         clas: "kotlin_suggestion_popup",
+         className: "kotlin_suggestion_popup",
       });
       this.$OptionContainer = tag("div", {
          className: "kotlin_suggestion_popup_container",
       });
       this.$PopupSession.append(this.$OptionContainer);
       app.get("main").append(this.$PopupSession);
-      this.$
+      this.$;
    }
 
    addOption(

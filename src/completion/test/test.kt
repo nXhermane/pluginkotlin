@@ -41,7 +41,7 @@ class yello(h:String) {
  
 @override
 fun main(ht:String) {
-	fun oui(jut:String) {
+					fun oui(jut:String) {
 		println("ju")
 		val x = 5
 
@@ -49,12 +49,11 @@ fun main(ht:String) {
 		val sum = x + y
 		var a = 8
 		if (true) {
-			beto("exemple", 42)
+			beto("exemple",42)
 		}
 		if (sum > 10) {
-		println("La somme est supérieure à 10.")
 		} else {
-			println("L a  somme à 10")
+			println("L   a  somme à 10")
 		}
 	}
 
@@ -65,4 +64,4 @@ class yoyo(hy:String) {
 class hello (var valo = "hello"
 
 )
-		const wao=['yello',] ( (2*2)+1)
+const wao=['yello',] ( (2*2)+1)

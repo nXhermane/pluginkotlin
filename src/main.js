@@ -5,8 +5,9 @@ const settings = acode.require("settings");
 import detectKotlinFileEvent from "./ace/event/detectKotlinFileEvent.js";
 import editorInputEvent from "./ace/event/editorInputEvent.js";
 import editorKeyDownAndUpEvent from "./ace/event/editorKeyDownAndUpEvent.js";
-import workerManager from './ace/workerManager/workerManager.js'
+import workerManager from "./ace/workerManager/workerManager.js";
 import editorChangeSelectionCursorEvent from "./ace/event/editorChangeSelectionCursorEvent.js";
+import Popup from "./ace/popup/suggestionPopup/suggestionPopup.js";
 class KotlinPlugin {
    // kotlin file detect condition
    detectKotlinFileCondition = false;
@@ -18,18 +19,38 @@ class KotlinPlugin {
    firtInsertTokens = false;
    async init() {
       detectKotlinFileEvent(this, editorManager);
-     
-      var primaryColor=localStorage.getItem('__primary_color')
+
+      var primaryColor = localStorage.getItem("__primary_color");
    }
    async start() {
       this.firtInsertTokens = false;
       const { editor } = editorManager;
       this.Worker = new Worker(`${this.baseUrl}worker.js`);
-      const instance = this
+      const instance = this;
       this.Worker.addEventListener("message", async () => {
          const { type, info } = JSON.parse(event.data);
-         workerManager(instance,type,info)
+         workerManager(instance, type, info);
       });
+      this.popup = new Popup(this.baseUrl, editor);
+      this.popup.addOption(
+         {
+            tokenText: "println",
+            suggestionType: "function",
+            iconPath: "send_blue.svg",
+         },
+         { main: "function to print text in console" },
+         true
+      );
+      this.popup.addOption(
+         {
+            tokenText: "println",
+            suggestionType: "function",
+            iconPath: "send_blue.svg",
+         },
+         { main: "function to print text in console" },
+         false
+      );
+      this.popup.show();
       // Submit code source to worker and get result to insert on word Manager tree
       this.Worker.postMessage({
          type: "analyse/extract",
@@ -40,10 +61,10 @@ class KotlinPlugin {
       // Add keyDown And KeyUp event
       editorKeyDownAndUpEvent(this, editor);
       // Add changeCursor  event to session selection
-      editorChangeSelectionCursorEvent(this,editor)
-      
+      editorChangeSelectionCursorEvent(this, editor);
    }
    async destroy() {}
+   
 }
 if (window.acode) {
    const acodePlugin = new KotlinPlugin();
