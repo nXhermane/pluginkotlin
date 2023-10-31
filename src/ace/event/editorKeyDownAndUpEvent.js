@@ -3,29 +3,64 @@ import insertOccurenceInfo from "./../util/insertOccurenceInfo.js";
 import Popup from "./../popup/suggestionPopup/suggestionPopup.js";
 export default function editorKeyDownEvent(instance, editor) {
    let keyupEventHandler = async (event) => {
-      if (
-         event.key === "ArrowUp" ||
-         event.key === "ArrowDown" ||
-         event.key === "Tab" ||
-         event.key === "Enter"
-      ) {
-         return;
+      if (instance.detectKotlinFileCondition) {
+         instance.popup.move();
+         if (
+            event.key === "ArrowUp" ||
+            event.key === "ArrowDown" ||
+            event.key === "Tab" ||
+            event.key === "Enter"
+         ) {
+            if (instance.popup.isOpen) {
+               return;
+            } else {
+               instance.lastPrefixLength = 0;
+               instance.popup.hidePopup();
+               instance.popup.isBlocked = false;
+               return;
+            }
+         }
+         if (
+            event.key === "ArrowRight" ||
+            event.key === "ArrowLeft" ||
+            event.key === "Backspace"
+         ) {
+            if (
+               instance.lastKey !== "Unidentified" &&
+               instance.lastPrefixLength == 0
+            ) {
+               instance.popup.hidePopup();
+               instance.popup.isBlocked = false;
+               return;
+            } else {
+               instance.lastKey = event.key;
+            }
+         } else {
+            instance.lastKey = event.key;
+         }
+
+         let prefix = getPrefix(editor);
+
+         instance.lastPrefixLength = prefix.length;
+         if (prefix.trim() == "" || prefix.trim() == "undefined") {
+            instance.popup.isBlocked = false;
+            instance.popup.hidePopup();
+            return;
+         }
+         instance.popup.isBlocked = true;
+         let searchArray = await instance.WordTree.search(prefix);
+         await insertOccurenceInfo(editor, searchArray);
+         console.log(prefix);
+         console.log(searchArray);
+         instance.popup.setData(searchArray);
       }
-      let prefix = getPrefix(editor);
-      if (prefix.trim() == "" || prefix.trim() == "undefined") {
-         return;
-      }
-      let searchArray = await instance.WordTree.search(prefix);
-      await insertOccurenceInfo(editor, searchArray);
-      console.log(searchArray);
    };
    editor.container
       .querySelector(".ace_text-input")
       .addEventListener("keydown", async () => {
          if (instance.detectKotlinFileCondition) {
-            instance.popup.move();
-            editor.container
-               .querySelector(".ace_text-input")
+            editor.textInput
+               .getElement()
                .addEventListener("keyup", keyupEventHandler);
          }
       });

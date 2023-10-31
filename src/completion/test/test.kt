@@ -1,67 +1,67 @@
 import youy.y.uo as hello
+fun main() {
+	println("Hello, World!")
+	val bbnbbn = 8
+	var beto = "value"
 
-fun beto(ht: String, h2: Int) {
-	println("oui")
-	val y = 10
-	fun yest(jut:String) {
-		println("ju")
+	fun belo() {
+		println('n')
 	}
 
-}
-
-class yello(h:String) {
-	class bb(v:String,b:Int) {
-		class bbn(nv:String,bn:Int) {
-			val yoyo = bb(b,v)
-		}
-		fun uuu() {}
-		fun uuu() {}
-		class bnb(vnb:String,bnv:Int) {
-			fun uuu() {}
-		}
+	fun bello() {
+		println("oui")
 	}
 
-}
+	fun bellola() {
+		println("vous")
+	}
+
+	fun helloWorld() {
+		println("hello")
+	}
+
+	class Hello(string: String) {}
 
 
-class yello(h:String) {
-	class bb(v:String,b:Int) {
-		class bbn(nv:String,bn:Int) {
-			val yoyo = bb(b,v)
-		}
-		fun uuu() {}
-	}
-	fun uuu() {
-		
-	}
-	class bnb(vnb:String,bnv:Int) {
-		fun uuu() {}
-	}
-}
- 
-@override
-fun main(ht:String) {
-					fun oui(jut:String) {
-		println("ju")
-		val x = 5
-
+	fun beto(ht: String, h2: Int) {
+		println("oui")
 		val y = 10
-		val sum = x + y
-		var a = 8
-		if (true) {
-			beto("exemple",42)
+
+		fun yest(jut: String) {
+			println("ju")
 		}
-		if (sum > 10) {
-		} else {
-			println("L   a  somme à 10")
+	}
+
+	class Yello(h: String) {
+		class Bb(v: String, b: Int) {
+			class Bbn(nv: String, bn: Int) {
+				val yoyo = Bb(b, v)
+			}
+
+			fun uuu() {}
+			fun uuu2() {}
+			class Bnb(vnb: String, bnv: Int) {
+				fun uuu3() {}
+			}
+		}
+	}
+
+	fun main(ht: String,bt:Int) {
+		fun oui(jut: String) {
+			println("ju")
+			val x:Int = 5
+			val y = 10
+			val sum = x + y
+			var a = 8
+			if (true) {
+				beto("exemple", 42)
+			}
+			if (sum > 10) {
+				println("La somme est supérieure à 10.")
+			} else {
+			println("La somme est inférieure ou égale  10")
+			}
 		}
 	}
 
 }
-class yoyo(hy:String) {
-	var valo="valbog"
-}
-class hello (var valo = "hello"
-
-)
-const wao=['yello',] ( (2*2)+1)
