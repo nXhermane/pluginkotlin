@@ -66,12 +66,14 @@ section#kotlin_popup_completion div.optionContainer div.Option div.token div.tok
   align-items: center;
 }
 section#kotlin_popup_completion div.optionContainer div.Option div.token div.tokenIcone svg {
-  height: 100%;
-  width: 100%;
+  height: 95%;
+  width: 95%;
   display:flex;
   justify-content:center;
   align-content:center;
+  
 }
+
 section#kotlin_popup_completion div.optionContainer div.Option div.token div.tokenText {
   font-family: Monospace;
   font-size: 1em;
@@ -95,6 +97,9 @@ section#kotlin_popup_completion div.optionContainer div.Option.active {
   background: var(--active-color);
   transition: 0.1s background ease-in-out;
   color: var(--popup-text-color);
+}
+section#kotlin_popup_completion div.optionContainer div.Option.active div.token div.tokenIcone svg{
+	fill:var(--popup-text-color);
 }
 section#kotlin_popup_completion div.optionContainer div.Option.active div.token > div.tokenText {
   opacity: 1;

@@ -9,6 +9,8 @@ import editorKeyDownAndUpEvent from "./ace/event/editorKeyDownAndUpEvent.js";
 import workerManager from "./ace/workerManager/workerManager.js";
 import Popup from "./ace/popup/index.js";
 import style from "./ace/popup/suggestionPopup/style.js";
+import errorManager from "./ace/error/errorManager.js";
+import Dao from "./completion/native/dao.js";
 class KotlinPlugin {
    // kotlin file detect condition
    detectKotlinFileCondition = false;
@@ -27,15 +29,31 @@ class KotlinPlugin {
       this.hashHandler = new HashHandler();
       this.popup = new Popup(this.baseUrl, editorManager.editor, this);
       editorManager.editor.popup = this.popup;
+      this.errorManager = new errorManager(editorManager.editor);
       var primaryColor = localStorage.getItem("__primary_color");
       settings.on("update", (fontSize) => {
          let el = document.head.querySelector("#kotlin_popup");
-         el.innerHTML=""
-         console.log(el.innerHTML)
+         el.innerHTML = "";
          el.innerHTML = style();
       });
+      const wasmScript = tag("script", {
+         src: this.baseUrl + "dist/sql-wasm.js",
+         id: "sqljs",
+      });
+      document.head.append(wasmScript);
+      this.dao = new Dao(this.baseUrl);
    }
    async start() {
+      this.dao.getDb().then((db) => {
+         const stmt = db.prepare(
+            "SELECT * FROM kotlin_native WHERE id_native BETWEEN $start AND $end"
+         );
+         stmt.getAsObject({ $start: 1, $end: 6 });
+         while (stmt.step()) {
+            const row = stmt.getAsObject();
+            console.log("Here is a row: " + JSON.stringify(row));
+         }
+      });
       this.firtInsertTokens = false;
       const { editor } = editorManager;
       this.Worker = new Worker(`${this.baseUrl}worker.js`);

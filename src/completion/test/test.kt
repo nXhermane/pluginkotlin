@@ -46,7 +46,7 @@ fun main() {
 		}
 	}
 
-	fun main(ht: String,bt:Int) {
+	fun main(ht: String,bt:Int):String {
 		fun oui(jut: String) {
 			println("ju")
 			val x:Int = 5
@@ -59,9 +59,9 @@ fun main() {
 			if (sum > 10) {
 				println("La somme est supérieure à 10.")
 			} else {
-			println("La somme est inférieure ou égale  10")
+				println("La somme est inférieure ou égale  10")
 			}
 		}
 	}
-
+	
 }

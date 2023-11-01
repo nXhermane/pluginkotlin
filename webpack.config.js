@@ -34,6 +34,7 @@ module.exports = (env, options) => {
 		module: {
 			rules,
 		},
+		
 		plugins: [
 			{
 				apply: (compiler) => {

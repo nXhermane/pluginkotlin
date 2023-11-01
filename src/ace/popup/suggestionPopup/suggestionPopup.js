@@ -1,6 +1,8 @@
 import relevance from "../../util/relevance.js";
 import getPrefix from "../../util/prefix.js";
 import style from "./style.js";
+import Icone from "./icone.js";
+import IconeAssocite from "./keyTypeIcone.js";
 const settings = acode.require("settings");
 /**
  * suggestionPopup - Represents a suggestion popup for displaying options in an editor.
@@ -58,17 +60,13 @@ export default class suggestionPopup {
     * @param {any} element - The data associated with the option.
     * @param {boolean} isActive - Indicates if the option is active (selected).
     */
-   addOption(
-      { tokenText, suggestionType, iconPath },
-      element,
-      isActive = false
-   ) {
+   addOption({ tokenText, suggestionType, icone }, element, isActive = false) {
       // Create DOM elements for the option
       let $Option = tag("div", { className: "Option" });
 
       let $token = tag("div", { className: "token" });
       let $tokenIcone = tag("div", { className: "tokenIcone" });
-      $tokenIcone.innerHTML = `<svg><image href="${this.baseUrl}${iconPath}" /></svg>`;
+      $tokenIcone.innerHTML = `${icone}`;
       let $tokenText = tag("div", { className: "tokenText" });
       let $p = tag("p", { textContent: tokenText });
       $tokenText.append($p);
@@ -140,15 +138,16 @@ export default class suggestionPopup {
       data.sort((a, b) => relevance(b.line) - relevance(a.line));
       // Clear the existing options in the suggestion popup
       this.Popup.querySelector("div.optionContainer").innerHTML = "";
-      const iconPath = "send_blue.svg";
+
       // Loop through the data and add each suggestion as an option
       for (let i = 0; i < data.length; i++) {
          const isActive = i == 0;
+         const icone = Icone(IconeAssocite(data[i].type));
          this.addOption(
             {
                tokenText: data[i].name,
                suggestionType: data[i].type,
-               iconPath: iconPath,
+               icone: icone,
             },
             data[i],
             isActive
