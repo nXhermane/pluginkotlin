@@ -1,9 +1,7 @@
 export default class Dao {
    constructor(baseUrl) {
       this.baseUrl = baseUrl;
-      this.db = null; // Initialisez la base de données à null par défaut.
-      
-      
+      this.db = null;
    }
 
    async init() {
@@ -27,5 +25,10 @@ export default class Dao {
       } else {
          return Promise.resolve(this.db);
       }
+   }
+   async selectAll() {
+      const db = await this.getDb();
+      const stmt = db.prepare("SELECT * FROM kotlin_native_keyword");
+      return stmt;
    }
 }

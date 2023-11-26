@@ -1,8 +1,22 @@
 const settings = acode.require("settings");
 function cssStyle() {
-   const fontSize = settings.get("fontSize");
+    const fontSize = settings.get("fontSize");
 
-   let style = `
+    let style = `
+  
+   
+   .sameLine{
+     position:absolute;
+   }
+   .sameLine::after{
+     content:" ";
+     position:absolute;
+     width:100%;
+     height:1px;
+     background:yellow;
+     left:0;
+     bottom:13%;
+   }
 section#kotlin_popup_completion {
   font-size:${fontSize};
   background: var(--primary-color);
@@ -115,7 +129,23 @@ section#kotlin_popup_completion div.optionContainer div.Option.active div.tokenI
 }
 
 `;
-   return style;
+    return style;
+}
+export function markerStyle(row) {
+    let style = `
+   .bckg{
+     position:absolute;
+   }
+   .bckg::before{
+     content:" ";
+     position:absolute;
+     width:1px;
+     height:${row * 100}%;
+     background:yellow;
+     top:0;
+   }
+  `;
+    return style;
 }
 
 export default cssStyle;

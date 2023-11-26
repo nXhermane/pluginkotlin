@@ -35,7 +35,8 @@ export default async function insertTokens(instance, editor) {
       await instance.WordTree.insert(uniqueArray);
       instance.firtInsertTokens = true;
    }
-   const allTokensInWordTree = await instance.WordTree.getAllWords();
+   let allTokensInWordTree = await instance.WordTree.getAllWords();
+   allTokensInWordTree = allTokensInWordTree.map((el) => el.word);
    const { added, removed } = compareWordArray(
       uniqueArray,
       allTokensInWordTree

@@ -4,7 +4,6 @@ import Popup from "./../popup/suggestionPopup/suggestionPopup.js";
 export default function editorKeyDownEvent(instance, editor) {
    let keyupEventHandler = async (event) => {
       if (instance.detectKotlinFileCondition) {
-         instance.popup.move();
          if (
             event.key === "ArrowUp" ||
             event.key === "ArrowDown" ||
@@ -16,7 +15,6 @@ export default function editorKeyDownEvent(instance, editor) {
             } else {
                instance.lastPrefixLength = 0;
                instance.popup.hidePopup();
-               instance.popup.isBlocked = false;
                return;
             }
          }
@@ -30,7 +28,6 @@ export default function editorKeyDownEvent(instance, editor) {
                instance.lastPrefixLength == 0
             ) {
                instance.popup.hidePopup();
-               instance.popup.isBlocked = false;
                return;
             } else {
                instance.lastKey = event.key;
@@ -38,20 +35,14 @@ export default function editorKeyDownEvent(instance, editor) {
          } else {
             instance.lastKey = event.key;
          }
-
          let prefix = getPrefix(editor);
-
          instance.lastPrefixLength = prefix.length;
          if (prefix.trim() == "" || prefix.trim() == "undefined") {
-            instance.popup.isBlocked = false;
             instance.popup.hidePopup();
             return;
          }
-         instance.popup.isBlocked = true;
          let searchArray = await instance.WordTree.search(prefix);
          await insertOccurenceInfo(editor, searchArray);
-         console.log(prefix);
-         console.log(searchArray);
          instance.popup.setData(searchArray);
       }
    };

@@ -40,16 +40,11 @@ export default class popup {
       this.Popup.goTo(direction);
    }
    hidePopup() {
-      this.Popup.hide();
+      this.Popup.detach();
    }
-   get isBlocked() {
-      return this.Popup.isBlocked;
-   }
+
    get isOpen() {
       return this.Popup.isOpen;
-   }
-   set isBlocked(boolean) {
-      this.Popup.isBlocked = boolean;
    }
    set isOpen(boolean) {
       this.Popup.isOpen = boolean;
@@ -68,9 +63,9 @@ export default class popup {
          "Enter": (editor) => {
             editor.popup.Popup.insertInEditor();
          },
-         "Tab": function(editor){
-				editor.popup.Popup.insertInEditor();
-         }
+         "Tab": function (editor) {
+            editor.popup.Popup.insertInEditor();
+         },
       };
       this.instance.hashHandler.bindKeys(commands);
       return this.instance.hashHandler;
